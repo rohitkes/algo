@@ -1,3 +1,5 @@
+import java.util.Map;
+
 /**
  * DateCreated 06/09/2020
  * author rohit
@@ -51,6 +53,29 @@ public class Trie {
         }
         return false;
     }
+    public void patternSearch(TriedNode current, String word, int index, String curr_str) {
+        if(index == word.length()) {
+            if(current.endOfWord) {
+                System.out.println(curr_str);
+            }
+            return;
+        }
+        char ch = word.charAt(index);
+        if( ch == '.') {
+            if(current != null) {
+                for (Map.Entry<Character, TriedNode> key : current.children.entrySet()) {
+                    patternSearch(current.children.get(key.getKey()), word, index + 1, curr_str + key.getKey());
+                }
+            }
+        }else {
+            TriedNode node = current.children.get(ch);
+            if(node != null) {
+                patternSearch(node, word, index + 1, curr_str + ch);
+            }else {
+                return ;
+            }
+        }
+    }
     public boolean searchWord(String word)
     {
         return search(root, word, 0);
@@ -58,5 +83,9 @@ public class Trie {
 
     public boolean deleteWord(String word) {
         return delete(root, word, 0);
+    }
+
+    public void searchPattern(String word) {
+        patternSearch(root, word, 0, "");
     }
 }
